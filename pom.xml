@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+            http://maven.apache.org/POM/4.0.0
+            https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.stockflow</groupId>
+    <artifactId>stockflow</artifactId>
+    <version>1.0</version>
+
+    <name>StockFlow</name>
+    <description>StockFlow inventory management system</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Java -->
+        <maven.compiler.release>25</maven.compiler.release>
+
+        <!-- Hibernate -->
+        <hibernate.version>7.4.10.Final</hibernate.version>
+
+        <!-- Database -->
+        <mysql.version>26.7.0</mysql.version>
+
+        <!-- Connection Pool -->
+        <hikari.version>7.0.2</hikari.version>
+
+        <!-- Cache -->
+        <caffeine.version>3.2.4</caffeine.version>
+
+        <!-- Testing -->
+        <junit.version>6.1.3</junit.version>
+    </properties>
+
+    <!--
+        Hibernate BOM keeps Hibernate modules and their
+        transitive dependencies aligned.
+    -->
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>org.hibernate.orm</groupId>
+                <artifactId>hibernate-platform</artifactId>
+                <version>${hibernate.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+
+        <!-- ==================== -->
+        <!-- Jakarta Persistence -->
+        <!-- ==================== -->
+
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+
+
+        <!-- ==================== -->
+        <!-- Hibernate ORM -->
+        <!-- ==================== -->
+
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
+
+
+        <!-- ==================== -->
+        <!-- MySQL JDBC Driver -->
+        <!-- ==================== -->
+
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+
+
+        <!-- ==================== -->
+        <!-- HikariCP -->
+        <!-- ==================== -->
+
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-hikaricp</artifactId>
+        </dependency>
+
+
+        <!-- ==================== -->
+        <!-- JCache / 2nd Level Cache -->
+        <!-- ==================== -->
+
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-jcache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>jcache</artifactId>
+            <version>${caffeine.version}</version>
+        </dependency>
+
+
+        <!-- ==================== -->
+        <!-- Testing -->
+        <!-- ==================== -->
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+
+    <!-- ======================== -->
+    <!-- Build Configuration -->
+    <!-- ======================== -->
+
+    <build>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.16.0</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.6.0</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.6.4</version>
+                <configuration>
+                    <mainClass>com.stockflow.App</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
+
+</project>
