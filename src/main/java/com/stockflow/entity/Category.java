@@ -1,10 +1,13 @@
 package com.stockflow.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -28,16 +31,18 @@ public class Category {
     private String description;
 
     @CreationTimestamp 
-    private LocalDateTime created_at;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp 
-    private  LocalDateTime updated_at;
+    @Column(name = "updated_at")
+    private  LocalDateTime updatedAt;
 
     @Version 
     private Integer version;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
-    private Product product;
+    private List<Product> products = new ArrayList<>();
 
     public Category() {
     }
@@ -72,19 +77,19 @@ public class Category {
     }
 
     public LocalDateTime getCreated_at() {
-        return created_at;
+        return createdAt;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
+    public void setCreated_at(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public LocalDateTime getUpdated_at() {
-        return updated_at;
+        return updatedAt;
     }
 
-    public void setUpdated_at(LocalDateTime updated_at) {
-        this.updated_at = updated_at;
+    public void setUpdated_at(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public Integer getVersion() {
@@ -95,14 +100,23 @@ public class Category {
         this.version = version;
     }
 
-    public Product getProduct() {
-        return product;
+    public List<Product> getProduct() {
+        return products;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProduct(List<Product> products) {
+        this.products = products;
     }
 
+    public void addProduct(Product product) {
+        products.add(product);
+        product.setCategory(this);
+    }
+    
+    public void removeProduct(Product product) {
+        products.remove(product);
+        product.setCategory(null);
+    }
     
 
 }

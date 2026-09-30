@@ -9,9 +9,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity 
-@Table 
+@Table(name = "tag", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class Tag {
 
     @Id 
@@ -54,5 +55,8 @@ public class Tag {
         this.products = products;
     }
 
-    
+    @Override
+    public String toString() {
+        return "Tag [id=" + id + ", name=" + name + "]";
+    }
 }
