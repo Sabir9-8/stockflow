@@ -3,6 +3,7 @@ package com.stockflow.entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -15,17 +16,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.Version;
 
 @Entity 
-@Table(name = "category", uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
+@Table(name = "category")
 public class Category {
 
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
+    @Column(name = "name",unique = true, nullable = false, length = 100)
     private String name;
 
     private String description;
@@ -41,23 +42,19 @@ public class Category {
     @Version 
     private Integer version;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 
     public Category() {
     }
-
+    
     public Category(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -76,47 +73,45 @@ public class Category {
         this.description = description;
     }
 
-    public LocalDateTime getCreated_at() {
-        return createdAt;
-    }
-
-    public void setCreated_at(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdated_at() {
-        return updatedAt;
-    }
-
-    public void setUpdated_at(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public List<Product> getProduct() {
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public List<Product> getProducts() {
         return products;
     }
 
-    public void setProduct(List<Product> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
     }
 
     public void addProduct(Product product) {
-        products.add(product);
+        Objects.requireNonNull(product, "Product cannot be null");
+
+        if (product.getCategory() == this) {
+            if (!products.contains(product)) {
+                products.add(product);
+            }
+            return;
+        }
+
+        Category previousCategory = product.getCategory();
+        if (previousCategory != null) {
+            previousCategory.getProducts().remove(product);
+        }
+
+        if (!products.contains(product)) {
+            products.add(product);
+        }
         product.setCategory(this);
     }
     
-    public void removeProduct(Product product) {
-        products.remove(product);
-        product.setCategory(null);
-    }
-    
-
 }

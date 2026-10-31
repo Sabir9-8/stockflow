@@ -5,8 +5,16 @@ import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Embeddable 
+@Embeddable
+@Setter 
+@Getter 
+@NoArgsConstructor 
+@AllArgsConstructor 
 public class InventoryId implements Serializable{
 
     private static final long serialVersionUID = 1L;
@@ -16,30 +24,6 @@ public class InventoryId implements Serializable{
 
     @Column(name = "product_id")
     private Long productId;
-
-    public InventoryId() {
-    }
-
-    public InventoryId(Long warehouseId, Long productId) {
-        this.warehouseId = warehouseId;
-        this.productId = productId;
-    }
-
-    public Long getWarehouseId() {
-        return warehouseId;
-    }
-
-    public void setWarehouseId(Long warehouseId) {
-        this.warehouseId = warehouseId;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
 
     @Override
     public int hashCode() {

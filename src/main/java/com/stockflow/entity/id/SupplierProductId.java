@@ -1,15 +1,18 @@
 package com.stockflow.entity.id;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Embeddable
-@Data 
+@Setter 
+@Getter 
 @NoArgsConstructor 
 @AllArgsConstructor 
 public class SupplierProductId implements Serializable{
@@ -21,4 +24,20 @@ public class SupplierProductId implements Serializable{
 
     @Column(name = "product_id")
     private Long productId;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(supplierId, productId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        SupplierProductId other = (SupplierProductId) obj;
+        return Objects.equals(supplierId, other.supplierId)
+            && Objects.equals(productId, other.productId);
+    }
 }
