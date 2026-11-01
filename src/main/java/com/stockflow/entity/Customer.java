@@ -18,15 +18,11 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.Version;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Setter
 @Getter
-@AllArgsConstructor 
 @NoArgsConstructor 
 @Table(name = "customer", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 public class Customer {
@@ -35,8 +31,10 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     private String phone;
@@ -44,11 +42,11 @@ public class Customer {
     private boolean active;
 
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     @Version
@@ -60,6 +58,29 @@ public class Customer {
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private CustomerProfile profile;
 
+    public Customer(String name, String email, String phone) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.active = true;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public void setProfile(CustomerProfile profile) {
         if (this.profile == profile) return;
         if (this.profile != null) {
@@ -69,5 +90,20 @@ public class Customer {
         if (profile != null) {
             profile.setCustomer(this);
         }
+    }
+
+    public void addOrder(Order order) {
+        if (order == null) return;
+        if (!orders.contains(order)) {
+            orders.add(order);
+        }
+        order.setCustomer(this);
+    }
+
+    public void removeOrder(Order order) {
+        if (order == null || !orders.contains(order))
+            return;
+        order.setCustomer(null);
+        orders.remove(order);
     }
 }

@@ -89,10 +89,6 @@ public class Category {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
     public void addProduct(Product product) {
         Objects.requireNonNull(product, "Product cannot be null");
 

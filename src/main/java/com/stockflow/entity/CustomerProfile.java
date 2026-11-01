@@ -30,6 +30,7 @@ public class CustomerProfile {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
+    @Column(name = "address", nullable = false)
     private String address;
 
     private String city;
@@ -38,13 +39,6 @@ public class CustomerProfile {
 
     @Column(name = "postal_code")
     private String postalCode;
-
-    public CustomerProfile(String address, String city, String state, String postalCode) {
-        this.address = address;
-        this.city = city;
-        this.state = state;
-        this.postalCode = postalCode;
-    }
 
     @Override 
     public boolean equals(Object o) {

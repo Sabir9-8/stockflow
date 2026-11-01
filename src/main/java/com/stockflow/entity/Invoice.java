@@ -2,7 +2,6 @@ package com.stockflow.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -15,14 +14,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@AllArgsConstructor
 @NoArgsConstructor
-@Setter 
 @Getter 
 @Entity 
 @Table(name = "invoice")
@@ -43,23 +38,30 @@ public class Invoice {
     @Column(name = "generated_at", nullable = false, updatable = false)
     private LocalDateTime generatedAt;
 
-    @Column(name = "total_amount")
+    @Column(name = "total_amount", nullable = false, precision = 12, scale = 2)
     private BigDecimal totalAmount;
 
     @Lob
     @Column(name = "document_data")
     private byte[] documentData;
-
-    @Override 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Invoice)) return false;
-        Invoice invoice = (Invoice) o;
-        return invoiceNumber != null && invoiceNumber.equals(invoice.getInvoiceNumber());
+    
+    public Invoice(String invoiceNumber, Order order, BigDecimal totalAmount, byte[] documentData) {
+        this.invoiceNumber = invoiceNumber;
+        this.order = order;
+        this.totalAmount = totalAmount;
+        this.documentData = documentData;
     }
 
-    @Override 
-    public int hashCode() {
-        return Objects.hash(invoiceNumber);
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
     }
+
+    public void setDocumentData(byte[] documentData) {
+        this.documentData = documentData;
+    }
+    
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
 }
