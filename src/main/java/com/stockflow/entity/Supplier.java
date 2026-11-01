@@ -3,6 +3,7 @@ package com.stockflow.entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -15,29 +16,36 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@Getter 
 @Entity 
 @Table(name = "supplier")
 public class Supplier {
 
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
+    @Column(name = "name", nullable = false, length = 30)
     private String name;
 
+    @Column(name = "email", nullable = false, unique = true, length = 50)
     private String email;
 
     private String phone;
 
-    private Boolean active;
+    @Column(name = "active", nullable = false)
+    private boolean active;
 
     @CreationTimestamp 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at") 
+    @Column(name = "updated_at", nullable = false) 
     private LocalDateTime updatedAt;
 
     @Version 
@@ -46,96 +54,39 @@ public class Supplier {
     @OneToMany(mappedBy = "supplier")
     private List<SupplierProduct> supplierProducts = new ArrayList<>();
 
-    public Supplier() {
-    }
-
-    public Supplier(String name, String email, String phone, Boolean active) {
+    public Supplier(String name, String email, String phone) {
         this.name = name;
         this.email = email;
         this.phone = phone;
-        this.active = active;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
+        this.active = true;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+    public void addProduct(SupplierProduct supplierProduct) {
+        Objects.requireNonNull(supplierProduct, "SupplierProduct cannot be null");
+        if(supplierProduct.getSupplier() != null && supplierProduct.getSupplier() != this) {
+            throw new IllegalStateException("SupplierProduct already belongs to another supplier");
+        }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public List<SupplierProduct> getSuplierProducts() {
-        return supplierProducts;
-    }
-
-    public void setSuplierProducts(List<SupplierProduct> suplierProducts) {
-        this.supplierProducts = suplierProducts;
-    }
-
-    public void addProduct(SupplierProduct product) {
-        supplierProducts.add(product);
-        product.setSupplier(this);
-    }
-
-    public void removeProduct(SupplierProduct product) {
-        supplierProducts.remove(product);
-        product.setSupplier(null);
+        if (!supplierProducts.contains(supplierProduct)) {
+            supplierProducts.add(supplierProduct);
+        }
+        supplierProduct.setSupplier(this);
     }
 
 }
