@@ -41,11 +41,11 @@ public class Warehouse {
     private boolean active;
 
     @CreationTimestamp 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime creationTime;
 
     @UpdateTimestamp 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updationTime;
 
     @Version 
@@ -77,22 +77,23 @@ public class Warehouse {
     }
 
     public void addInventory(Inventory inventory) {
-
-    }
-
-    public void removeInventory(Inventory inventory) {
-        if (inventory == null || !inventories.contains(inventory)) return;
-
-        
+        if (inventory == null || inventories.contains(inventory)) return;
+        Warehouse currentWarehouse = inventory.getWarehouse();
+        if (currentWarehouse != null && currentWarehouse != this) {
+            throw new IllegalStateException("This inventory belongs to another warehouse");
+        }
+        inventory.setWarehouse(this);
+        inventories.add(inventory);
     }
 
     public void addStockMovement(StockMovement stockMovement) {
-
+        if (stockMovement == null || stockMovements.contains(stockMovement)) return;
+        Warehouse currentWarehouse = stockMovement.getWarehouse();
+        if (currentWarehouse != null && currentWarehouse != this) {
+            throw new IllegalStateException("This stock movement belongs to another warehouse");
+        }
+        stockMovement.setWarehouse(this);
+        stockMovements.add(stockMovement);
     }
 
-    public void removeStockMovement(StockMovement stockMovement) {
-        if (stockMovement == null || !stockMovements.contains(stockMovement)) return;
-
-        
-    }
 }

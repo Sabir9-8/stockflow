@@ -33,7 +33,7 @@ public class StockMovement {
     @JoinColumn(name = "warehouse_id", nullable = false)
     private Warehouse warehouse;
 
-    @Column(name = "movement_type", length = 3)
+    @Column(name = "movement_type", nullable = false, length = 3)
     private String movementType;
 
     @Column(name = "quantity", nullable = false)
@@ -43,14 +43,14 @@ public class StockMovement {
     private String referenceType;
 
     @Column(name = "reference_id")
-    private String referenceId;
+    private Long referenceId;
 
     @CreationTimestamp 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     public StockMovement(Product product, Warehouse warehouse, String movementType, Integer quantity,
-            String referenceType, String referenceId) {
+            String referenceType, Long referenceId) {
         this.product = product;
         this.warehouse = warehouse;
         this.movementType = movementType;
@@ -59,16 +59,22 @@ public class StockMovement {
         this.referenceId = referenceId;
     }
 
-    public void setProduct(Product product) {
+    private static boolean isValidMovementType(String type) {
+        return "IN".equals(type) || "OUT".equals(type) || "ADJ".equals(type);
+    }
+
+    void setProduct(Product product) {
         this.product = product;
     }
 
-    public void setWarehouse(Warehouse warehouse) {
+    void setWarehouse(Warehouse warehouse) {
         this.warehouse = warehouse;
     }
 
     public void setMovementType(String movementType) {
-        this.movementType = movementType;
+        if (isValidMovementType(movementType)){
+            this.movementType = movementType;
+        }
     }
 
     public void setQuantity(Integer quantity) {
@@ -79,7 +85,7 @@ public class StockMovement {
         this.referenceType = referenceType;
     }
 
-    public void setReferenceId(String referenceId) {
+    public void setReferenceId(Long referenceId) {
         this.referenceId = referenceId;
     }
     

@@ -50,10 +50,18 @@ public class Inventory {
     private Integer version;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     public Inventory(Warehouse warehouse, Product product, Integer availableQuantity, Integer reservedQuantity) {
+        if (warehouse == null || product == null) {
+            throw new IllegalArgumentException("Warehouse and product are required");
+        }
+
+        if (availableQuantity == null || availableQuantity < 0
+            || reservedQuantity == null || reservedQuantity < 0) {
+            throw new IllegalArgumentException("Inventory quantities cannot be negative");
+        }
         this.warehouse = warehouse;
         this.product = product;
         this.availableQuantity = availableQuantity;
@@ -69,14 +77,23 @@ public class Inventory {
     }
 
     public void setAvailableQuantity(Integer availableQuantity) {
+        if (availableQuantity == null || availableQuantity < 0) {
+            throw new IllegalArgumentException("Available quantity cannot be negative");
+        }
         this.availableQuantity = availableQuantity;
     }
 
     public void setReservedQuantity(Integer reservedQuantity) {
+        if (reservedQuantity == null || reservedQuantity < 0) {
+            throw new IllegalArgumentException("Reserved quantity cannot be negative");
+        }
         this.reservedQuantity = reservedQuantity;
     }
 
     public void setReorderLevel(Integer reorderLevel) {
+        if (reorderLevel != null && reorderLevel < 0) {
+            throw new IllegalArgumentException("Reorder level cannot be negative");
+        }
         this.reorderLevel = reorderLevel;
     }
 
