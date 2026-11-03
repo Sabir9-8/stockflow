@@ -3,6 +3,7 @@ package com.stockflow.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,8 +18,9 @@ public class Tag {
 
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Integer id;
+    private  Long id;
 
+    @Column(name = "name", nullable = false)
     private String name;
 
     @ManyToMany(mappedBy = "tags")
@@ -31,12 +33,8 @@ public class Tag {
         this.name = name;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -51,12 +49,15 @@ public class Tag {
         return products;
     }
 
-    public void setProducts(Set<Product> products) {
-        this.products = products;
+    public void addProduct(Product product) {
+        if (product != null) {
+            product.addTag(this);
+        }
     }
 
-    @Override
-    public String toString() {
-        return "Tag [id=" + id + ", name=" + name + "]";
+    public void removeProduct(Product product) {
+        if (product != null) {
+            product.removeTag(this);
+        }
     }
 }

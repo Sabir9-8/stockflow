@@ -73,6 +73,8 @@ public class Inventory {
     }
 
     void setProduct(Product product) {
+        if (product == null) return;
+        product.getInventories().add(this);
         this.product = product;
     }
 

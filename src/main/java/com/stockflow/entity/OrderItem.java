@@ -1,6 +1,7 @@
 package com.stockflow.entity;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,6 +47,12 @@ public class OrderItem {
     private BigDecimal subtotal;
 
     public OrderItem(Order order, Product product, Integer quantity, BigDecimal unitPrice, BigDecimal discount, BigDecimal subtotal) {
+        if (quantity == null || quantity < 1) {
+            throw new IllegalStateException("Order quantity cannot be non-positive");
+        }
+        if (unitPrice == null || unitPrice.doubleValue() <= 0.0) {
+            throw new IllegalStateException("Price should not be negative");
+        }
         this.order = order;
         this.product = product;
         this.quantity = quantity;
@@ -58,7 +65,9 @@ public class OrderItem {
         this.order = order;
     }
 
-    public void setProduct(Product product) {
+    void setProduct(Product product) {
+        if (product == null) return;
+        product.getOrderItems().add(this);
         this.product = product;
     }
 
@@ -76,5 +85,19 @@ public class OrderItem {
 
     public void setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
+    }
+
+    @Override 
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (o == null || !(o instanceof OrderItem)) return false;
+        OrderItem item = (OrderItem) o;
+
+        return Objects.equals(order, item.order) && Objects.equals(product, item.product);
+    }
+
+    @Override 
+    public int hashCode() {
+        return Objects.hash(order, product);
     }
 }

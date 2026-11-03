@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,8 +35,9 @@ public class StockMovement {
     @JoinColumn(name = "warehouse_id", nullable = false)
     private Warehouse warehouse;
 
-    @Column(name = "movement_type", nullable = false, length = 3)
-    private String movementType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "movement_type", nullable = false, length = 20)
+    private MovementType movementType;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
@@ -49,7 +52,7 @@ public class StockMovement {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public StockMovement(Product product, Warehouse warehouse, String movementType, Integer quantity,
+    public StockMovement(Product product, Warehouse warehouse, MovementType movementType, Integer quantity,
             String referenceType, Long referenceId) {
         this.product = product;
         this.warehouse = warehouse;
@@ -59,22 +62,27 @@ public class StockMovement {
         this.referenceId = referenceId;
     }
 
-    private static boolean isValidMovementType(String type) {
-        return "IN".equals(type) || "OUT".equals(type) || "ADJ".equals(type);
+    public enum MovementType {
+        PURCHASE,
+        SALE,
+        RETURN,
+        IN,
+        OUT,
+        ADJUSTMENT
+    }
+
+    public void setMovementType(MovementType movementType) {
+        this.movementType = movementType;
     }
 
     void setProduct(Product product) {
+        if (product == null) return;
         this.product = product;
+        product.getStockMovements().add(this);
     }
 
     void setWarehouse(Warehouse warehouse) {
         this.warehouse = warehouse;
-    }
-
-    public void setMovementType(String movementType) {
-        if (isValidMovementType(movementType)){
-            this.movementType = movementType;
-        }
     }
 
     public void setQuantity(Integer quantity) {

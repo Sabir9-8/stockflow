@@ -73,6 +73,8 @@ public class SupplierProduct {
     }
 
     void setProduct(Product product) {
+        if (product == null) return;
+        product.getSupplierProducts().add(this);
         this.product = product;
     }
 }
