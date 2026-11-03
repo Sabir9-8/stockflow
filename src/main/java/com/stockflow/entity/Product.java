@@ -49,7 +49,7 @@ public class Product {
     private boolean active;
 
     @Lob 
-    @Column(name = "image_data")
+    @Column(name = "image_data", columnDefinition = "MEDIUMBLOB")
     private byte[] image;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -156,8 +156,14 @@ public class Product {
         this.image = image;
     }
 
-    void setCategory(Category category) {
-        this.category = category;
+    public void setCategory(Category newCategory) {
+        if (this.category != null) {
+            this.category.getProducts().remove(this);
+        }
+        this.category = newCategory;
+        if (newCategory != null && !newCategory.getProducts().contains(this)) {
+            newCategory.getProducts().add(this);
+        }
     }
 
     public void addTag(Tag tag) {

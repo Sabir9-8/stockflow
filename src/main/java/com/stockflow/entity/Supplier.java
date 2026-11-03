@@ -89,4 +89,10 @@ public class Supplier {
         supplierProduct.setSupplier(this);
     }
 
+    public void removeProduct(SupplierProduct supplierProduct) {
+        if (supplierProduct != null && supplierProducts.remove(supplierProduct)) {
+            supplierProduct.setSupplier(null);
+        }
+    }
+
 }

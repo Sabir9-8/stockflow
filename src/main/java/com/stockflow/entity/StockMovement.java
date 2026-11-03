@@ -36,7 +36,7 @@ public class StockMovement {
     private Warehouse warehouse;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "movement_type", nullable = false, length = 20)
+    @Column(name = "movement_type", nullable = false, length = 15)
     private MovementType movementType;
 
     @Column(name = "quantity", nullable = false)
@@ -66,8 +66,8 @@ public class StockMovement {
         PURCHASE,
         SALE,
         RETURN,
-        IN,
-        OUT,
+        TRANSFER_IN,
+        TRANSFER_OUT,
         ADJUSTMENT
     }
 

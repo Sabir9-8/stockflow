@@ -75,15 +75,14 @@ public class Order {
     @OneToOne(mappedBy = "order", cascade = CascadeType.PERSIST)
     private Invoice invoice;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> items = new ArrayList<>();
 
-    public Order(String orderNumber, Customer customer, LocalDateTime orderDate, OrderStatus status, BigDecimal totalAmount) {
+    public Order(String orderNumber, Customer customer, LocalDateTime orderDate, OrderStatus status) {
         this.orderNumber = orderNumber;
         this.customer = customer;
         this.orderDate = orderDate;
         this.status = status;
-        this.totalAmount = totalAmount;
     }
 
     public void setCustomer(Customer customer) {
@@ -104,6 +103,12 @@ public class Order {
 
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public void recalculateTotalAmount() {
+        this.totalAmount = items.stream()
+            .map(OrderItem::getSubtotal)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public void setInvoice(Invoice invoice) {

@@ -66,14 +66,23 @@ public class Customer {
     }
 
     public void setName(String name) {
+        if (name == null || name.isBlank()){
+            throw new IllegalStateException("Name cannot be empty");
+        }
         this.name = name;
     }
 
     public void setEmail(String email) {
+        if (email == null || email.isBlank()){
+            throw new IllegalStateException("Email cannot be empty");
+        }
         this.email = email;
     }
 
     public void setPhone(String phone) {
+        if (phone == null || phone.isBlank()){
+            throw new IllegalStateException("Phone No. cannot be empty");
+        }
         this.phone = phone;
     }
 

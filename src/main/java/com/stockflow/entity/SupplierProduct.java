@@ -2,6 +2,7 @@ package com.stockflow.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import com.stockflow.entity.id.SupplierProductId;
 
@@ -53,14 +54,23 @@ public class SupplierProduct {
     }
 
     public void setSupplierPrice(BigDecimal supplierPrice) {
+        if(supplierPrice.doubleValue() <= 0.0){
+            throw new IllegalStateException("Price Should be positive");
+        }
         this.supplierPrice = supplierPrice;
     }
 
     public void setMinimumQuantity(Integer minimumQuantity) {
+        if (minimumQuantity <= 0) {
+            throw new IllegalStateException("Quantity Should be positive");
+        }
         this.minimumQuantity = minimumQuantity;
     }
 
     public void setLeadTimeDays(Integer leadTimeDays) {
+        if (leadTimeDays <= 0) {
+            throw new IllegalStateException("Lead Time Days Should be positive");
+        }
         this.leadTimeDays = leadTimeDays;
     }
 
@@ -77,4 +87,20 @@ public class SupplierProduct {
         product.getSupplierProducts().add(this);
         this.product = product;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(product, supplier);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        SupplierProduct other = (SupplierProduct) obj;
+        return Objects.equals(product, other.getProduct()) && Objects.equals(supplier, other.getSupplier());
+    }
+
 }

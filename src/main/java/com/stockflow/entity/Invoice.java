@@ -42,7 +42,7 @@ public class Invoice {
     private BigDecimal totalAmount;
 
     @Lob
-    @Column(name = "document_data")
+    @Column(name = "document_data", columnDefinition = "MEDIUMBLOB")
     private byte[] documentData;
     
     public Invoice(String invoiceNumber, Order order, BigDecimal totalAmount, byte[] documentData) {

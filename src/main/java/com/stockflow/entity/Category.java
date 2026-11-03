@@ -110,4 +110,9 @@ public class Category {
         product.setCategory(this);
     }
     
+    public void removeProduct(Product product) {
+        if (product != null && products.remove(product)) {
+            product.setCategory(null);
+        }
+    }
 }

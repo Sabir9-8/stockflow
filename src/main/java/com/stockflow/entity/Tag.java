@@ -48,16 +48,5 @@ public class Tag {
     public Set<Product> getProducts() {
         return products;
     }
-
-    public void addProduct(Product product) {
-        if (product != null) {
-            product.addTag(this);
-        }
-    }
-
-    public void removeProduct(Product product) {
-        if (product != null) {
-            product.removeTag(this);
-        }
-    }
+    
 }

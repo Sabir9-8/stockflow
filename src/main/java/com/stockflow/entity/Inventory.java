@@ -1,6 +1,7 @@
 package com.stockflow.entity;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -85,6 +86,19 @@ public class Inventory {
         this.availableQuantity = availableQuantity;
     }
 
+    public void addAvailableStock(int amount) {
+        if (amount < 0) throw new IllegalArgumentException("Amount to add must be positive");
+        this.availableQuantity += amount;
+    }
+
+    public void removeAvailableStock(int amount) {
+        if (amount < 0) throw new IllegalArgumentException("Amount to remove must be positive");
+        if (this.availableQuantity - amount < 0) {
+            throw new IllegalStateException("Insufficient stock. Cannot drop below 0.");
+        }
+        this.availableQuantity -= amount;
+    }
+
     public void setReservedQuantity(Integer reservedQuantity) {
         if (reservedQuantity == null || reservedQuantity < 0) {
             throw new IllegalArgumentException("Reserved quantity cannot be negative");
@@ -97,6 +111,21 @@ public class Inventory {
             throw new IllegalArgumentException("Reorder level cannot be negative");
         }
         this.reorderLevel = reorderLevel;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(product, warehouse);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        Inventory other = (Inventory) obj;
+        return Objects.equals(warehouse, other.getWarehouse()) && Objects.equals(product, other.getProduct());
     }
 
 }

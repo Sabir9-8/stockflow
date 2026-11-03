@@ -11,12 +11,10 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
 @Getter
 @Table(name = "customer_profile")
 public class CustomerProfile {
@@ -39,6 +37,40 @@ public class CustomerProfile {
 
     @Column(name = "postal_code")
     private String postalCode;
+
+    private static void validateString(String string) {
+        if (string == null || string.isBlank()){
+            throw new IllegalStateException("Data cannot be empty");
+        }
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public void setAddress(String address) {
+        validateString(address);
+        this.address = address;
+    }
+
+    public void setCity(String city) {
+        validateString(city);
+        this.city = city;
+    }
+
+    public void setState(String state) {
+        validateString(state);
+        this.state = state;
+    }
+
+    public void setPostalCode(String postalCode) {
+        validateString(postalCode);
+        this.postalCode = postalCode;
+    }
 
     @Override 
     public boolean equals(Object o) {

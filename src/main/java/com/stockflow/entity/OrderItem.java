@@ -87,13 +87,18 @@ public class OrderItem {
         this.subtotal = subtotal;
     }
 
+    public void calculateSubtotal() {
+        BigDecimal base = unitPrice.multiply(new BigDecimal(quantity));
+        this.subtotal = discount != null ? base.subtract(discount) : base;
+    }
+
     @Override 
     public boolean equals(Object o) {
         if (o == this) return true;
         if (o == null || !(o instanceof OrderItem)) return false;
         OrderItem item = (OrderItem) o;
 
-        return Objects.equals(order, item.order) && Objects.equals(product, item.product);
+        return Objects.equals(order, item.getOrder()) && Objects.equals(product, item.getProduct());
     }
 
     @Override 
